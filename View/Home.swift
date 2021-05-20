@@ -13,10 +13,42 @@ struct Home: View {
     var body: some View {
         
         VStack {
-            if homeData.imageData.count == 0 {
+            if !homeData.allImages.isEmpty && homeData.mainView != nil{
+                
+                Image(uiImage: homeData.mainView.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: UIScreen.main.bounds.width)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 20) {
+                        ForEach(homeData.allImages){
+                            filtered in
+                            Image(uiImage: filtered.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 150, height: 150)
+                            
+                                .onTapGesture {
+                                    homeData.mainView = filtered
+                                }
+                        }
+                    }
+                    .padding()
+                }
+            }
+            else if homeData.imageData.count == 0 {
                 Text("Pick An Image To Progress")
             }
+            else {
+                ProgressView()
+            }
         }
+        .onChange(of: homeData.imageData, perform: { (_) in
+            // When Ever image is changed Firing loadImage
+            homeData.allImages.removeAll()
+            homeData.loadFilter()
+        })
         .toolbar {
             // image button
             ToolbarItem(placement: .navigationBarTrailing) {
