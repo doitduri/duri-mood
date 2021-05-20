@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct Home: View {
-    
     @StateObject var homeData = HomeViewModel()
     var body: some View {
         
         VStack {
-            if !homeData.allImages.isEmpty && homeData.mainView != nil{
-                
+            
+            if !homeData.allImages.isEmpty && homeData.mainView != nil {
                 Image(uiImage: homeData.mainView.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: UIScreen.main.bounds.width)
+                
+                Slider(value: $homeData.value)
+                    .padding()
+                    .opacity(homeData.mainView.isEditable ? 1 : 0)
+                    .disabled(homeData.mainView.isEditable ? false : true)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 20) {
@@ -30,6 +34,7 @@ struct Home: View {
                                 .frame(width: 150, height: 150)
                             
                                 .onTapGesture {
+                                    homeData.value = 1.0
                                     homeData.mainView = filtered
                                 }
                         }
@@ -44,11 +49,16 @@ struct Home: View {
                 ProgressView()
             }
         }
+        .onChange(of: homeData.value, perform: { (_) in
+            homeData.updateEffect()
+        })
         .onChange(of: homeData.imageData, perform: { (_) in
             // When Ever image is changed Firing loadImage
             homeData.allImages.removeAll()
+            homeData.mainView = nil
             homeData.loadFilter()
         })
+        
         .toolbar {
             // image button
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -56,6 +66,17 @@ struct Home: View {
                     Image(systemName: "photo")
                         .font(.title2)
                 }
+            }
+            
+            // saving Image
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    UIImageWriteToSavedPhotosAlbum(homeData.mainView.image, nil, nil, nil)
+                }) {
+                    Image(systemName: "square.and.arrow.up.fill")
+                        .font(.title2)
+                }
+                .disabled(homeData.mainView == nil ? true : false)
             }
         }
         .sheet(isPresented: $homeData.imagePicker) {
