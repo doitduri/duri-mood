@@ -13,7 +13,13 @@ struct Home: View {
     var body: some View {
         
         VStack {
-            if !homeData.allImages.isEmpty{
+            if !homeData.allImages.isEmpty && homeData.mainView != nil{
+                
+                Image(uiImage: homeData.mainView.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: UIScreen.main.bounds.width)
+                
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 20) {
                         ForEach(homeData.allImages){
@@ -22,6 +28,10 @@ struct Home: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 150, height: 150)
+                            
+                                .onTapGesture {
+                                    homeData.mainView = filtered
+                                }
                         }
                     }
                     .padding()

@@ -15,7 +15,9 @@ class HomeViewModel: ObservableObject {
     
     @Published var allImages: [FilteredImage] = []
     
-    
+
+    // main editing image
+    @Published var mainView : FilteredImage!
 
     
     // loading filterOption WhenEver Image is Selected
@@ -46,6 +48,11 @@ class HomeViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.allImages.append(filteredData)
+                    
+                    // default Image
+                    if self.mainView == nil {
+                        self.mainView = self.allImages.first
+                    }
                 }
             }
         }
