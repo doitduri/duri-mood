@@ -15,30 +15,39 @@ class HomeViewModel: ObservableObject {
     
     @Published var allImages: [FilteredImage] = []
     
-    // loading filterOption WhenEver Image is Selected
     
-    let filters: [CIFilter] = []
+
+    
+    // loading filterOption WhenEver Image is Selected
+    let filters: [CIFilter] = [
+        CIFilter.sepiaTone(), CIFilter.comicEffect(), CIFilter.colorInvert(), CIFilter.photoEffectFade(), CIFilter.colorMonochrome(),
+        CIFilter.photoEffectChrome(), CIFilter.gaussianBlur(),CIFilter.bloom()
+    ]
     
     func loadFilter() {
         
         let context = CIContext()
         
         filters.forEach { (filter) in
-            // loading iamge into filter
-            let CiImage = CIImage(data: imageData)
-            
-            filter.setValue(CiImage!, forKey: kCIInputImageKey)
-            //retreving image
-            
-            
-            guard let newImage = filter.outputImage else {
-                return
+            DispatchQueue.global(qos: .userInteractive).async {
+                // loading iamge into filter
+                let CiImage = CIImage(data: self.imageData)
+                
+                filter.setValue(CiImage!, forKey: kCIInputImageKey)
+                //retreving image
+                
+                
+                guard let newImage = filter.outputImage else {
+                    return
+                }
+                
+                let cgimage = context.createCGImage(newImage, from: newImage.extent)
+                let filteredData = FilteredImage(image: UIImage(cgImage: cgimage!), filter: filter)
+                
+                DispatchQueue.main.async {
+                    self.allImages.append(filteredData)
+                }
             }
-            
-            let cgimage = context.createCGImage(newImage, from: newImage.extent)
-            let filteredData = FilteredImage(image: UIImage(cgImage: cgimage!), filter: filter)
-            
-            self.allImages.append(filteredData)
         }
     }
 }
