@@ -31,6 +31,37 @@ struct CameraView: View {
                         .padding(.trailing, 10)
                     }
                 }
+                Spacer()
+                HStack{
+                    if camera.isTaken{
+                        Button(action: {
+                            if !camera.isSaved{camera.savePic()}
+                        }, label: {
+                            Text(camera.isSaved ? "Saved":"Save")
+                                .foregroundColor(.black)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .background(Color.white)
+                                .clipShape(Capsule())
+                        })
+                        .padding(.leading)
+                        
+                        Spacer()
+                    }
+                    else {
+                        Button(action: camera.takePic, label: {
+                            ZStack{
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 65, height: 65)
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2)
+                                    .frame(width: 75, height: 75)
+                            }
+                        })
+                    }
+                }
+                .frame(height: 75)
             }
         }
         .onAppear(perform: {
