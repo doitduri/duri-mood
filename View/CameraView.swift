@@ -22,11 +22,22 @@ struct CameraView: View {
                     HStack{
                         Spacer()
                         Button(action: camera.reTake, label: {
-                            /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
+                            Image(systemName: "arrow.triangle.2.circlepath.camera")
+                                .foregroundColor(.black)
+                                .padding()
+                                .background(Color.white)
+                                .clipShape(Circle())
                         })
+                        .padding(.trailing, 10)
                     }
                 }
             }
+        }
+        .onAppear(perform: {
+            camera.checkPermission()
+        })
+        .alert(isPresented: $camera.alert){
+            Alert(title: Text("Please Enable Camera Access"))
         }
     }
 }

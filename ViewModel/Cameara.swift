@@ -114,5 +114,4 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate{
         self.isSaved = true
         print("saved sucecussfully...")
     }
-    
 }
