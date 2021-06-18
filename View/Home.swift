@@ -43,7 +43,8 @@ struct Home: View {
                 }
             }
             else if homeData.imageData.count == 0 {
-                Text("Pick An Image To Progress")
+//                Text("Pick An Image To Progress")
+                CameraView()
             }
             else {
                 ProgressView()

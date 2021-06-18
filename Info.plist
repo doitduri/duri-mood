@@ -47,6 +47,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
     <key>NSPhotoLibraryUsageDescription</key>
+    <string>갤러리 접근을 허용합니다.</string>
+    <key>NSCameraUsageDescription</key>
     <string>카메라 접근을 허용합니다.</string>
 </dict>
 </plist>
